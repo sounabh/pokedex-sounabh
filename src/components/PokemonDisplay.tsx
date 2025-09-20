@@ -60,11 +60,7 @@ export const PokemonDisplay = ({ pokemon, onPokemonSelect }: PokemonDisplayProps
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Navigation Controls */}
-      <PokemonNavigation 
-        pokemon={pokemon}
-        onPokemonSelect={onPokemonSelect}
-        isLoading={isLoading}
-      />
+     
 
       {/* Pokemon Basic Info */}
       <PokemonBasicInfo pokemon={pokemon} />

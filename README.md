@@ -1,73 +1,52 @@
-# Welcome to your Lovable project
+# Pokedex Web App
 
-## Project info
+A modern, fully-featured Pokedex web app built with **React**, **TypeScript**, **Vite**, **TailwindCSS**, and **Radix UI** components. It uses [PokeAPI](https://pokeapi.co/api/v2) to fetch Pokemon data and provides a rich UI with search functionality, toast notifications, text-to-speech, and detailed Pokemon information.
 
-**URL**: https://lovable.dev/projects/8968ccb5-4517-4d15-bb92-457164d5e984
+---
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Search for any Pokemon by name or ID.
+- Display detailed Pokemon information:
+  - Images (front, back, shiny)
+  - Stats (HP, Attack, Defense, etc.)
+  - Types
+  - Weight & height
+  - Description / flavor text
+  - Evolution chain
+  - Moves
+- Toast notifications for feedback (success/error).
+- Text-to-speech for Pokemon names.
+- Fully responsive layout with TailwindCSS.
+- Carousel for multiple images and evolutions.
+- Error handling for invalid searches.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8968ccb5-4517-4d15-bb92-457164d5e984) and start prompting.
+## Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend Framework**: React 18, Vite
+- **Styling**: TailwindCSS, tailwind-merge, tailwindcss-animate
+- **UI Components**: Radix UI (Accordion, Tabs, Toast, Tooltip, etc.)
+- **State Management & Data Fetching**: @tanstack/react-query, React Context
+- **Forms & Validation**: react-hook-form, zod
+- **Routing**: react-router-dom
+- **Notifications**: sonner
+- **Charts**: recharts
+- **Utilities**: clsx, date-fns, lucide-react, input-otp
+- **Networking**: axios
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+# Clone repository
+git clone https://github.com/yourusername/pokedex-webapp.git
+cd pokedex-webapp
 
-Follow these steps:
+# Install dependencies
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8968ccb5-4517-4d15-bb92-457164d5e984) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

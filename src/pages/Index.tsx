@@ -14,11 +14,14 @@ const Index = () => {
           <h1 className="text-4xl md:text-6xl font-digital font-black text-white text-glow-blue mb-2">
             POKÉDEX
           </h1>
+           <p className="text-sm md:text-base text-gray-300 font-digital mb-4">
+    Made by Sounabh
+  </p>
           <div className="flex justify-center items-center space-x-4 mb-6">
-            <div className="w-4 h-4 bg-pokedex-yellow rounded-full shadow-lg"></div>
+            <div className="w-3 h-3 bg-pokedex-yellow rounded-full shadow-lg"></div>
             <div className="w-3 h-3 bg-pokedex-blue rounded-full shadow-lg"></div>
             <div className="w-3 h-3 bg-pokedex-green rounded-full shadow-lg"></div>
-            <div className="w-2 h-2 bg-red-500 rounded-full shadow-lg"></div>
+
           </div>
         </div>
 
