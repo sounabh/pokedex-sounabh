@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Pokemon } from "@/types/pokemon";
 import { pokemonApi } from "@/utils/pokemonApi";
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, Filter, X } from "lucide-react";
 
 interface PokemonSearchProps {
   onPokemonSelect: (pokemon: Pokemon | null) => void;
@@ -13,10 +14,28 @@ interface PokemonSearchProps {
 export const PokemonSearch = ({ onPokemonSelect }: PokemonSearchProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showTypeFilter, setShowTypeFilter] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const { toast } = useToast();
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) {
+  const pokemonTypes = [
+    'normal', 'fire', 'water', 'electric', 'grass', 'ice',
+    'fighting', 'poison', 'ground', 'flying', 'psychic', 'bug',
+    'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy'
+  ];
+
+  const popularPokemon = [
+    { name: "pikachu", id: 25 },
+    { name: "charizard", id: 6 },
+    { name: "mewtwo", id: 150 },
+    { name: "lucario", id: 448 },
+    { name: "gardevoir", id: 282 },
+    { name: "rayquaza", id: 384 }
+  ];
+
+  const handleSearch = async (searchValue?: string) => {
+    const term = searchValue || searchTerm;
+    if (!term.trim()) {
       toast({
         title: "Search Error",
         description: "Please enter a Pokémon name or ID",
@@ -27,11 +46,11 @@ export const PokemonSearch = ({ onPokemonSelect }: PokemonSearchProps) => {
 
     setIsLoading(true);
     try {
-      const pokemon = await pokemonApi.getPokemon(searchTerm.toLowerCase().trim());
+      const pokemon = await pokemonApi.getPokemon(term.toLowerCase().trim());
       onPokemonSelect(pokemon);
       toast({
         title: "Pokémon Found!",
-        description: `Successfully loaded ${pokemon.name}`,
+        description: `Successfully loaded ${pokemonApi.formatPokemonName(pokemon.name)}`,
       });
     } catch (error) {
       toast({
@@ -45,6 +64,52 @@ export const PokemonSearch = ({ onPokemonSelect }: PokemonSearchProps) => {
     }
   };
 
+  const handleTypeFilter = async (type: string) => {
+    setIsLoading(true);
+    try {
+      const typeData = await pokemonApi.searchPokemonByType(type);
+      if (typeData.pokemon.length > 0) {
+        // Get a random Pokémon of this type
+        const randomIndex = Math.floor(Math.random() * Math.min(20, typeData.pokemon.length));
+        const selectedPokemonData = typeData.pokemon[randomIndex].pokemon;
+        const pokemon = await pokemonApi.getPokemon(selectedPokemonData.name);
+        onPokemonSelect(pokemon);
+        toast({
+          title: `${type.toUpperCase()} Type Found!`,
+          description: `Found ${pokemonApi.formatPokemonName(pokemon.name)}`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Search Failed",
+        description: `Could not find ${type} type Pokémon`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRandomPokemon = async () => {
+    setIsLoading(true);
+    try {
+      const pokemon = await pokemonApi.getRandomPokemon();
+      onPokemonSelect(pokemon);
+      toast({
+        title: "Random Pokémon!",
+        description: `Found ${pokemonApi.formatPokemonName(pokemon.name)}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Random Search Failed",
+        description: "Could not load random Pokémon",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
@@ -52,7 +117,8 @@ export const PokemonSearch = ({ onPokemonSelect }: PokemonSearchProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
+      {/* Main Search */}
       <div className="flex space-x-2">
         <Input
           type="text"
@@ -64,9 +130,9 @@ export const PokemonSearch = ({ onPokemonSelect }: PokemonSearchProps) => {
           disabled={isLoading}
         />
         <Button
-          onClick={handleSearch}
+          onClick={() => handleSearch()}
           disabled={isLoading}
-          className="bg-pokedex-blue hover:bg-pokedex-blue-dark text-white font-digital"
+          className="hardware-button bg-pokedex-blue/80 hover:bg-pokedex-blue text-white"
         >
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -76,23 +142,73 @@ export const PokemonSearch = ({ onPokemonSelect }: PokemonSearchProps) => {
         </Button>
       </div>
 
+      {/* Control Buttons */}
+      <div className="flex space-x-2">
+        <Button
+          onClick={handleRandomPokemon}
+          disabled={isLoading}
+          className="hardware-button bg-pokedex-yellow/80 hover:bg-pokedex-yellow text-black flex-1"
+        >
+          🎲 RANDOM
+        </Button>
+        <Button
+          onClick={() => setShowTypeFilter(!showTypeFilter)}
+          className={`hardware-button flex-1 ${showTypeFilter ? 'bg-pokedex-green/20' : ''}`}
+        >
+          <Filter className="h-4 w-4 mr-1" />
+          TYPES
+        </Button>
+      </div>
+
+      {/* Type Filter */}
+      {showTypeFilter && (
+        <div className="control-panel animate-slide-in-right">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-digital text-sm text-screen-text">SELECT TYPE</span>
+            <Button
+              onClick={() => setShowTypeFilter(false)}
+              className="p-1 h-6 w-6 hardware-button"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+          <div className="grid grid-cols-3 gap-1">
+            {pokemonTypes.map((type) => (
+              <Button
+                key={type}
+                onClick={() => handleTypeFilter(type)}
+                disabled={isLoading}
+                className="hardware-button text-xs p-1 h-8"
+                style={{
+                  backgroundColor: pokemonApi.getTypeColor(type) + '30',
+                  borderColor: pokemonApi.getTypeColor(type)
+                }}
+              >
+                {type.toUpperCase()}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Quick Access Buttons */}
-      <div className="grid grid-cols-3 gap-2">
-        {["pikachu", "charizard", "mewtwo", "lucario", "gardevoir", "rayquaza"].map((name) => (
-          <Button
-            key={name}
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setSearchTerm(name);
-              setTimeout(() => handleSearch(), 100);
-            }}
-            disabled={isLoading}
-            className="font-digital text-xs bg-muted/20 border-screen-border hover:bg-pokedex-blue/20 text-screen-text"
-          >
-            {name}
-          </Button>
-        ))}
+      <div className="control-panel">
+        <div className="text-xs font-digital text-screen-text/70 mb-2">POPULAR POKÉMON</div>
+        <div className="grid grid-cols-3 gap-2">
+          {popularPokemon.map((pokemon) => (
+            <Button
+              key={pokemon.name}
+              onClick={() => handleSearch(pokemon.name)}
+              disabled={isLoading}
+              className="hardware-button text-xs p-2 h-10"
+            >
+              <div className="text-center">
+                <div className="font-bold">{pokemon.name.toUpperCase()}</div>
+                <div className="text-xs opacity-70">#{pokemon.id}</div>
+              </div>
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );

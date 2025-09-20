@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Pokemon, PokemonSpecies, EvolutionChain } from "@/types/pokemon";
+import { Pokemon, PokemonSpecies, EvolutionChain, MoveDetails } from "@/types/pokemon";
 
 const BASE_URL = "https://pokeapi.co/api/v2";
 
@@ -23,6 +23,28 @@ class PokemonApi {
 
   async getEvolutionChain(url: string): Promise<EvolutionChain> {
     return this.get<EvolutionChain>(url);
+  }
+
+  async getMove(nameOrId: string | number): Promise<MoveDetails> {
+    return this.get<MoveDetails>(`${BASE_URL}/move/${nameOrId}`);
+  }
+
+  async getRandomPokemon(): Promise<Pokemon> {
+    // Generate random ID between 1 and 1010 (current total Pokémon count)
+    const randomId = Math.floor(Math.random() * 1010) + 1;
+    return this.getPokemon(randomId);
+  }
+
+  async searchPokemonByType(type: string): Promise<{pokemon: Array<{pokemon: {name: string; url: string}}>}> {
+    return this.get<{pokemon: Array<{pokemon: {name: string; url: string}}>}>(`${BASE_URL}/type/${type}`);
+  }
+
+  getNextPokemonId(currentId: number): number {
+    return currentId >= 1010 ? 1 : currentId + 1;
+  }
+
+  getPreviousPokemonId(currentId: number): number {
+    return currentId <= 1 ? 1010 : currentId - 1;
   }
 
   getTypeColor(type: string): string {
