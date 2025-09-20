@@ -14,6 +14,21 @@ export default {
     },
     extend: {
       colors: {
+        // Pokédex Brand Colors
+        "pokedex-red": "hsl(var(--pokedex-red))",
+        "pokedex-red-dark": "hsl(var(--pokedex-red-dark))",
+        "pokedex-blue": "hsl(var(--pokedex-blue))",
+        "pokedex-blue-dark": "hsl(var(--pokedex-blue-dark))",
+        "pokedex-green": "hsl(var(--pokedex-green))",
+        "pokedex-yellow": "hsl(var(--pokedex-yellow))",
+        
+        // Digital Screen Colors
+        "screen-bg": "hsl(var(--screen-bg))",
+        "screen-glow": "hsl(var(--screen-glow))",
+        "screen-text": "hsl(var(--screen-text))",
+        "screen-border": "hsl(var(--screen-border))",
+        
+        // Base System Colors
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -57,6 +72,10 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      fontFamily: {
+        'digital': ['Orbitron', 'Roboto Mono', 'monospace'],
+        'mono': ['Roboto Mono', 'monospace'],
       },
       borderRadius: {
         lg: "var(--radius)",
